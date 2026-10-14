@@ -37,3 +37,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!viewer.hidden)c
 
 
 document.querySelector("#enter-void").onclick=()=>VoidScene.open();
+
+document.querySelectorAll('.work-link').forEach(button=>{button.onclick=()=>openImage(Number(button.dataset.image));});
