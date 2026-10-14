@@ -1,0 +1,47 @@
+const canvas=document.querySelector('#eye'),ctx=canvas.getContext('2d');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const names=['Soft focus','Silver lining','Quiet surface','After light','Inner space','Fading form','Between shadows','Still motion','Pale horizon','Light study','Slow exposure','Open field'];
+const gradients=names.map((_,i)=>`radial-gradient(ellipse at ${20+i*7}% ${15+(i*13)%65}%,#f5f5f5 0%,#c${i%4+3}c${i%4+3}c${i%4+3} 32%,#${['777','888','999','666'][i%4]} 72%,#454545 100%)`);
+let w=0,h=0,r=0,rx=0,ry=0,tx=0,ty=0,auto=true,drag=false,start=null,last=null,moved=false,patches=[],projected=[],hover=null,current=0,selected=null,lastFocus=null,opened=false;
+const pupil=.17,step=.095;
+for(let ring=0;ring<31;ring++){let a=pupil+ring*step,b=Math.min(Math.PI,a+step*.93);if(a>=Math.PI)break;let count=Math.max(12,Math.round(Math.sin((a+b)/2)*65));for(let j=0;j<count;j++){let p=j/count*Math.PI*2,q=(j+.93)/count*Math.PI*2;patches.push({a,b,p,q,id:patches.length,index:(ring*7+j)%12,shade:((ring*19+j*31)%17)/17});}}
+function resize(){const box=canvas.getBoundingClientRect();w=box.width;h=box.height;const d=Math.min(devicePixelRatio,2);canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);r=Math.min(w*.365,h*.395);}
+new ResizeObserver(resize).observe(canvas);
+function point(a,p){let x=Math.sin(a)*Math.cos(p),y=Math.sin(a)*Math.sin(p),z=Math.cos(a);let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);let x1=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);let scale=3.8/(3.8-z2);return{x:w*.52+x1*r*scale,y:h*.49+y1*r*scale,z:z2};}
+function poly(points){ctx.beginPath();points.forEach((v,i)=>i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();}
+function hit(x,y){for(let i=projected.length-1;i>=0;i--){const f=projected[i];let inside=false;for(let a=0,b=f.v.length-1;a<f.v.length;b=a++){const u=f.v[a],v=f.v[b];if((u.y>y)!=(v.y>y)&&x<(v.x-u.x)*(y-u.y)/(v.y-u.y)+u.x)inside=!inside;}if(inside)return f;}return null;}
+// Follow the pointer relative to the eye, including outside the canvas.
+function followPointer(e){
+ if(!auto||opened||!indexPanel.hidden||!about.hidden)return;
+ if(e.pointerType==='touch'&&!drag)return;
+ const rect=canvas.getBoundingClientRect();
+ const dx=e.clientX-(rect.left+w*.52),dy=e.clientY-(rect.top+h*.49);
+ ty=Math.max(-.85,Math.min(.85,Math.atan2(dx,Math.max(r*1.6,180))*.8));
+ tx=Math.max(-.65,Math.min(.65,-Math.atan2(dy,Math.max(r*1.6,180))*.65));
+}
+document.addEventListener('pointermove',followPointer);
+document.documentElement.addEventListener('pointerleave',()=>{if(auto&&!opened){tx=0;ty=0;}});
+let previousTime=0;
+function draw(time){let dt=Math.min((time-previousTime)/1000,.04);previousTime=time;const ease=1-Math.exp(-dt*(reduced?20:8));rx+=(tx-rx)*ease;ry+=(ty-ry)*ease;ctx.clearRect(0,0,w,h);
+let shadow=ctx.createRadialGradient(w*.53,h*.49+r*1.42,0,w*.53,h*.49+r*1.42,r*.9);shadow.addColorStop(0,'rgba(80,88,75,.12)');shadow.addColorStop(1,'rgba(80,88,75,0)');ctx.save();ctx.translate(0,h*.49+r*1.42);ctx.scale(1,.14);ctx.translate(0,-(h*.49+r*1.42));ctx.fillStyle=shadow;ctx.fillRect(0,0,w,h*6);ctx.restore();
+// Each image is a curved spherical patch, projected with a perspective camera.
+projected=patches.map(f=>{let m=point((f.a+f.b)/2,(f.p+f.q)/2);if(m.z<.17)return null;let v=[point(f.a,f.p),point(f.a,(f.p+f.q)/2),point(f.a,f.q),point((f.a+f.b)/2,f.q),point(f.b,f.q),point(f.b,(f.p+f.q)/2),point(f.b,f.p),point((f.a+f.b)/2,f.p)];return{...f,v,z:m.z};}).filter(Boolean).sort((a,b)=>a.z-b.z);
+let border=point(0,0);ctx.beginPath();ctx.ellipse(w*.52,h*.49,r*1.036,r*1.036,0,0,Math.PI*2);ctx.fillStyle='#d5d8d3';ctx.fill();
+for(const f of projected){let iris=f.a<.68,edge=f.a>.58&&f.a<.77;let light=iris?(edge?48:75+f.shade*50):181+f.shade*47;light*=.64+.36*f.z;let g=ctx.createLinearGradient(f.v[0].x,f.v[0].y,f.v[4].x,f.v[4].y);g.addColorStop(0,`rgb(${light+20},${light+21},${light+19})`);g.addColorStop(1,`rgb(${light-19},${light-17},${light-20})`);poly(f.v);ctx.fillStyle=g;ctx.fill();if(hover?.id===f.id){ctx.fillStyle='#ffffff65';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.stroke();}}
+let pv=[];for(let j=0;j<80;j++)pv.push(point(pupil,j/80*Math.PI*2));poly(pv);ctx.fillStyle='#20231f';ctx.fill();
+// A restrained corneal highlight adds optical depth without hiding the archive.
+if(border.z>0){let glint=point(.30,4.0);ctx.save();ctx.translate(glint.x,glint.y);ctx.rotate(-.5);let g=ctx.createRadialGradient(0,0,0,0,0,r*.16);g.addColorStop(0,'rgba(255,255,255,.45)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.scale(1,.6);ctx.fillStyle=g;ctx.fillRect(-r*.2,-r*.2,r*.4,r*.4);ctx.restore();}requestAnimationFrame(draw);}
+requestAnimationFrame(draw);
+const rot=document.querySelector('#rotation');function syncRotation(){rot.setAttribute('aria-pressed',auto);document.querySelector('#rotation-icon').textContent=auto?'●':'○';}syncRotation();rot.onclick=()=>{auto=!auto;syncRotation();};document.querySelector('#reset').onclick=()=>{tx=0;ty=0;};
+canvas.addEventListener('pointerdown',e=>{drag=true;moved=false;start=last={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove',e=>{let rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;if(drag){if(Math.hypot(e.clientX-start.x,e.clientY-start.y)>5)moved=true;last={x:e.clientX,y:e.clientY};hover=null;}else{hover=hit(x,y);}const label=document.querySelector('.hover-label');label.style.display=hover&&!drag?'block':'none';if(hover){label.textContent=`VIEW ${String(hover.index+1).padStart(2,'0')} ↗`;label.style.left=`${Math.min(x+15,w-115)}px`;label.style.top=`${y-30}px`;}canvas.style.cursor=hover?'pointer':'default';});
+canvas.addEventListener('pointerup',e=>{drag=false;if(!moved){let rect=canvas.getBoundingClientRect();let f=hit(e.clientX-rect.left,e.clientY-rect.top);if(f){selected=f;openImage(f.index,{x:e.clientX,y:e.clientY,size:Math.max(25,r*.13)});}}});canvas.addEventListener('pointercancel',()=>{drag=false;});canvas.addEventListener('pointerleave',()=>{hover=null;document.querySelector('.hover-label').style.display='none';});
+const viewer=document.querySelector('#viewer'),square=document.querySelector('#square');
+function updateImage(){square.style.background=gradients[current];document.querySelector('#viewer-number').textContent=`GRAYSCALE STUDY / ${String(current+1).padStart(2,'0')} — 12`;document.querySelector('#viewer-title').textContent=names[current];}
+function openImage(i,origin){current=i;opened=true;lastFocus=document.activeElement;viewer.hidden=false;updateImage();const b=square.getBoundingClientRect();if(!reduced){square.animate([{transform:origin?`translate(${origin.x-b.x-b.width/2}px,${origin.y-b.y-b.height/2}px) scale(${origin.size/b.width}) rotateY(35deg)`:'scale(.8)',opacity:.5},{transform:'translate(0,0) scale(1) rotateY(0)',opacity:1}],{duration:760,easing:'cubic-bezier(.2,.75,.15,1)'});viewer.animate([{backgroundColor:'#ffffff00',backdropFilter:'blur(0px)'},{backgroundColor:'#ffffffed',backdropFilter:'blur(10px)'}],{duration:550});}document.querySelector('#close-viewer').focus();}
+function closeImage(){viewer.hidden=true;opened=false;lastFocus?.focus();}document.querySelector('#close-viewer').onclick=closeImage;viewer.onclick=e=>{if(e.target===viewer)closeImage();};document.querySelector('#prev').onclick=()=>{current=(current+11)%12;updateImage();};document.querySelector('#next').onclick=()=>{current=(current+1)%12;updateImage();};
+const indexPanel=document.querySelector('#index'),indexToggle=document.querySelector('#index-toggle');function closeIndex(){indexPanel.hidden=true;indexToggle.setAttribute('aria-expanded','false');indexToggle.focus();}indexToggle.onclick=()=>{indexPanel.hidden=false;indexToggle.setAttribute('aria-expanded','true');document.querySelector('#close-index').focus();};document.querySelector('#close-index').onclick=closeIndex;
+names.forEach((name,i)=>{const b=document.createElement('button');b.className='index-card';b.innerHTML=`<div style="background:${gradients[i]}"></div><p><span>${String(i+1).padStart(2,'0')} / ${name}</span><span>↗</span></p>`;b.onclick=()=>{let rect=b.firstElementChild.getBoundingClientRect();openImage(i,{x:rect.x+rect.width/2,y:rect.y+rect.height/2,size:rect.width});};document.querySelector('#index-grid').append(b);});
+const about=document.querySelector('#about'),aboutToggle=document.querySelector('.about-toggle');function closeAbout(){about.hidden=true;aboutToggle.setAttribute('aria-expanded','false');aboutToggle.focus();}aboutToggle.onclick=()=>{about.hidden=!about.hidden;aboutToggle.setAttribute('aria-expanded',!about.hidden);};document.querySelector('.close-about').onclick=closeAbout;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!viewer.hidden)closeImage();else if(!indexPanel.hidden)closeIndex();else if(!about.hidden)closeAbout();}if(!viewer.hidden){if(e.key==='ArrowRight')document.querySelector('#next').click();if(e.key==='ArrowLeft')document.querySelector('#prev').click();}const panel=!viewer.hidden?viewer:!indexPanel.hidden?indexPanel:null;if(e.key==='Tab'&&panel){const list=[...panel.querySelectorAll('button')],first=list[0],last=list.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+
