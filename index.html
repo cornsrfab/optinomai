@@ -4,13 +4,13 @@
 <header><a class="brand" href="./" aria-label="처음으로"><span class="brand-eye">◉</span> OCULUS<span class="registered">®</span></a><span class="header-note">A COLLECTION OF PERSPECTIVES</span><button class="about-toggle" aria-expanded="false">About <span>↗</span></button></header>
 <main><div class="topline"><span><i></i> VISUAL PORTFOLIO / 2026</span><span>EXPERIMENT NO. 001</span></div>
 <div class="heading"><p>보는 방식에 대하여</p><h1>A point<br>of <em>view.</em></h1></div>
-<section class="stage" aria-label="회색 이미지로 구성된 마우스를 따라 바라보는 3D 눈"><canvas id="eye" aria-label="3D 눈. 마우스를 움직이면 눈이 따라봅니다. 이미지 조각을 클릭하세요."></canvas><div class="annotation a1"><span>01 — SCLERA</span><b></b></div><div class="annotation a2"><b></b><span>02 — IRIS / IMAGE ARCHIVE</span></div><div class="annotation a3"><span>03 — PUPIL</span><b></b></div><div class="hover-label" aria-hidden="true"></div></section>
-<div class="intro"><span class="tiny">AN EXPLORATION OF SEEING</span><p>하나의 시선, 수많은 장면.<br>마우스를 따라가는 시선, 클릭하면 펼쳐지는 장면.</p></div>
-<div class="controls"><button id="rotation" aria-pressed="true"><span id="rotation-icon">Ⅱ</span> FOLLOW CURSOR</button><button id="reset" aria-label="정면으로 초기화">↺</button><button id="index-toggle" aria-expanded="false">IMAGE INDEX <span>↗</span></button></div>
-<div class="hint"><span>↔</span> MOVE TO LOOK <i>·</i> CLICK TO EXPLORE</div>
+<section class="stage" aria-label="회색 이미지로 구성된 회전하는 3D 눈"><canvas id="eye" aria-label="3D 눈. 드래그로 회전하세요. 중앙 동공을 클릭하면 3D 공간이 열립니다."></canvas><div class="annotation a1"><span>01 — SCLERA</span><b></b></div><div class="annotation a2"><b></b><span>02 — IRIS / IMAGE ARCHIVE</span></div><div class="annotation a3"><span>03 — INNER VOID</span><b></b></div><div class="hover-label" aria-hidden="true"></div></section>
+<div class="intro"><span class="tiny">AN EXPLORATION OF SEEING</span><p>하나의 시선, 수많은 장면.<br>눈을 돌려 장면을 찾고, 동공 안의 우주로 들어가세요.</p></div>
+<div class="controls"><button id="rotation" aria-pressed="true"><span id="rotation-icon">Ⅱ</span> AUTO ROTATE</button><button id="reset" aria-label="정면으로 초기화">↺</button><button id="enter-void">ENTER VOID ↗</button><button id="index-toggle" aria-expanded="false">IMAGE INDEX <span>↗</span></button></div>
+<div class="hint"><span>↔</span> DRAG TO ROTATE <i>·</i> CLICK TO EXPLORE</div>
 </main>
 <footer><span>© 2026 OCULUS</span><span class="footer-center">EVERY IMAGE IS A WAY OF SEEING.</span><span><i></i> GRAYSCALE STUDIES</span></footer>
 <aside id="about" hidden><button class="close-about" aria-label="소개 닫기">×</button><span class="tiny">ABOUT THIS EXPLORATION</span><h2>시선이 모여<br>하나의 세계로.</h2><p>이미지의 조각들이 눈의 곡면을 이루는 인터랙티브 포트폴리오입니다. 각 조각을 선택하면 하나의 장면이 정사각형으로 펼쳐집니다.</p><p class="muted">현재 모든 이미지는 회색 그라데이션 플레이스홀더입니다.</p></aside>
 <section id="index" hidden aria-label="이미지 목록"><div class="index-heading"><div><span class="tiny">IMAGE ARCHIVE</span><h2>Grayscale studies<span> / 12</span></h2></div><button id="close-index" aria-label="목록 닫기">×</button></div><div id="index-grid"></div></section>
 <div id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden><button id="close-viewer" aria-label="이미지 닫기">CLOSE <span>×</span></button><div id="square"></div><div class="viewer-caption"><div><span class="tiny" id="viewer-number"></span><h2 id="viewer-title"></h2><p>회색 그라데이션 · 이미지 플레이스홀더</p></div><div class="viewer-nav"><button id="prev" aria-label="이전 이미지">←</button><button id="next" aria-label="다음 이미지">→</button></div></div></div>
-<script src="app.js"></script></body></html>
+<script src="void.js"></script><script src="app.js"></script></body></html>
