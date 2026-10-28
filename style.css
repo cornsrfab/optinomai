@@ -28,3 +28,13 @@ header.identity{top:64px;bottom:32px;transform:none;justify-content:flex-start;w
 @media(max-height:500px){.paper-object{width:64px}.paper-object-0,.paper-object-1{top:0}.paper-object-3,.paper-object-4{bottom:0}}
 @media(prefers-reduced-motion:reduce){.paper-hint{transition:none}}
 
+
+/* Labels and their leader lines are now component assembly controls. */
+button.annotation{pointer-events:auto;min-height:44px;padding:10px 4px;cursor:pointer;border-radius:3px;touch-action:manipulation;transition:color .2s,background-color .2s}
+button.annotation:hover,button.annotation:focus-visible{color:#263b2c;background:#ffffffc9}
+button.annotation[aria-pressed="true"]{color:#324e39}
+button.annotation[aria-pressed="true"] b{background:#718c72}
+button.annotation[aria-pressed="true"] b:after{background:#718c72;border-color:#718c72}
+button.annotation:focus-visible{outline:1px solid #718c72;outline-offset:3px}
+@media(max-width:760px){button.annotation{font-size:7px;gap:5px}.a1{right:13%;top:24%}.a2{right:13%;bottom:24%}.a3{left:1%;top:55%}}
+@media(prefers-reduced-motion:reduce){button.annotation{transition:none}}
