@@ -130,3 +130,9 @@ SCLERA / IRIS / PUPIL 지시선과 텍스트를 접근 가능한 토글 버튼�
 사용자가 확인한 실제 작업으로 왼쪽 연도별 목록을 교체했습니다. 2025: gravitational lensing, neutron star collision monument / 2024: the arc of motion. 임시 작업명 목록은 제거했고, 세 항목은 `data-image` 0–2와 `app.js`의 `names` 앞 3개로 연결됩니다. 나머지 `names` 3–11과 모든 이미지는 아직 더미입니다.
 
 작업 사진의 원본은 Figma 파일 `스튜디오 포트폴리오 (Copy)`(The Arc of Motion / Gravitational Lens Simulator / The Phew)에 있습니다. 포트폴리오상 공식 제목은 Gravitational Lens Simulator이며 사이트 표기 통일 여부와 The Phew의 연도·추가 여부는 사용자 확인 대기입니다.
+
+## 2026-10-29: 동공 속 천구에 첫 천체사진 배치
+
+사용자 촬영 사진(2023-05-31)을 `images/astro/ngc6888.webp`로 배경을 투명하게 잘라 추가했습니다. 사진의 대상은 NGC 6888 초승달 성운(백조자리)이며, 사용자가 '게성운'이라고 불렀으나 형태상 초승달 성운으로 판단해 실제 좌표 RA 20h12m07s, DEC +38°21′에 배치했습니다(게성운 M1이 맞다면 `void.js`의 `photo.ra/dec`를 RA 5h34m32s, DEC +22°01′로 바꿉니다).
+
+`void.js`의 `photo` 객체가 위치·표시 크기(`world`, 실제 18′보다 크게 확대)·이미지를 담고, 천구 좌표 표시와 같은 규칙(lon = RA, lat = −DEC)으로 그립니다. 사진 클릭 또는 하단 `NGC 6888` 버튼으로 촬영 정보 카드(`#void-info`)가 열리며 ESC는 카드를 먼저 닫습니다. 장비·노출 정보는 아직 받지 않았습니다. 사진이 늘어나면 `photo`를 배열로 바꿉니다.
