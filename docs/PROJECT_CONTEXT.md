@@ -156,3 +156,11 @@ SCLERA / IRIS / PUPIL 지시선과 텍스트를 접근 가능한 토글 버튼�
 - `vendor/astronomy.browser.min.js`(Astronomy Engine, MIT)로 브라우저에서 달·토성의 현재 위치(지구 중심 J2000)를 계산합니다. 천구가 열려 있는 동안 1분마다 갱신합니다.
 - 달 경로(`moonPath`)는 '지금부터 한 항성월'로 매번 다시 계산하고, 월식 사진 4줄은 그 경로의 고정 비율 위치(`moonT`)를 따라 움직입니다. 현재 달은 `MOON · NOW` 원형 표식, 토성 사진은 `SATURN · NOW` 위치에 그려집니다. 라이브러리가 없으면 저장된 2026-10-29 경로로 동작합니다.
 - 스크립트 순서: `vendor/astronomy.browser.min.js` → `sky-data.js` → `void.js` → `app.js`.
+
+## 2026-10-29: 실제 프로젝트 아카이브 (2020–2026)
+
+- 작업 데이터는 `works.js`의 `WORKS` 배열 하나로 관리합니다(id, year, title, desc, images). 왼쪽 연도 목록·눈 표면 타일·이미지 뷰어·Archive 그리드가 모두 여기서 생성되며 임시 작업명과 고정 길이 12는 없어졌습니다.
+- 출처: 사용자 PPTX 『[신입] 박서진 오브제 공간 포트폴리오』와 Figma 『스튜디오 포트폴리오 (Copy)』의 연도·설명. 2026 실가지 / 식물 행위성 / 대관령 기후작물은행, 2025 gravitational lensing simulator / neutron star collision monument, 2024 the arc of motion / deformed vast nature 2, 2022 holo clock / for the starvved, 2021 the phew, 2020 mineral project. 2023은 확인된 작업이 없습니다.
+- 이미지: `images/works/full`(뷰어, 긴 변 1600), `thumb`(그리드 480²), `tile`(눈 표면용 흑백 128²). PPTX에서 잘라낸 것이며, 대관령 기후작물은행·deformed vast nature 2·the phew는 Figma에만 있어(샌드박스에서 Figma 이미지 다운로드 차단) 아직 회색 자리표시입니다. Extended Twilight 이미지(`twilight-*`)는 연도 확인 전이라 목록에 넣지 않았습니다.
+- 이미지 추가: 세 크기를 만들어 넣고 해당 작업의 `images`에 파일명을 더하면 끝입니다.
+- astrophotography 메뉴는 천체 원본 사진(`images/astro/full`)을 보여주고, personal archive는 아직 자리표시입니다. 뷰어 설명문(.viewer-caption p)을 다시 보이게 해 작업 설명을 표시합니다.
