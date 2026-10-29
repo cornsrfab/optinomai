@@ -1,6 +1,6 @@
 const canvas=document.querySelector('#eye'),ctx=canvas.getContext('2d');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const names=['Soft focus','Silver lining','Quiet surface','After light','Inner space','Fading form','Between shadows','Still motion','Pale horizon','Light study','Slow exposure','Open field'];
+const names=['Gravitational lensing','Neutron star collision monument','The arc of motion','After light','Inner space','Fading form','Between shadows','Still motion','Pale horizon','Light study','Slow exposure','Open field'];
 const gradients=names.map((_,i)=>`radial-gradient(ellipse at ${20+i*7}% ${15+(i*13)%65}%,#f5f5f5 0%,#c${i%4+3}c${i%4+3}c${i%4+3} 32%,#${['777','888','999','666'][i%4]} 72%,#454545 100%)`);
 let w=0,h=0,r=0,baseRadius=0,rx=-.08,ry=-.19,tx=-.08,ty=-.19,auto=!reduced,drag=false,start=null,last=null,moved=false,patches=[],projected=[],hover=null,current=0,selected=null,lastFocus=null,opened=false;
 const separation={sclera:0,iris:0,pupil:0};
