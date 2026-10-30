@@ -3,7 +3,6 @@
 window.WORKS=[
  {id:'silgaji',year:2026,title:'실가지',en:'Silgaji',desc:'16 × 7 × 3 m · 오간자, 골판지 등 혼합재료 · 우석갤러리 2인전, 기획/홍보 및 참여',images:['silgaji-1','silgaji-2','silgaji-3']},
  {id:'plant-agency',year:2026,title:'식물 행위성',en:'Plant Agency',desc:'나뭇가지, 동판 등 혼합재료 키네틱 구조물 · GALLERY TYA 2인전',images:['plant-agency-1','plant-agency-2','plant-agency-3','plant-agency-4','plant-agency-5']},
- {id:'climate-bank',year:2026,title:'대관령 기후작물은행',en:'Daegwallyeong Climate Crop Bank',desc:'대관령의 고랭지 기후를 바탕으로 작물을 보존·연구하는 기후작물은행 제안 · 정림건축 JAdU 7기 5일 팀 워크숍',images:[]},
  {id:'lensing',year:2025,title:'gravitational lensing simulator',en:'Gravitational Lensing Simulator',desc:'1.8 × 1.8 × 0.8 m · 반생이, 거울 1,680장 등 혼합재료 · 《암적응》 파워플랜트 단체전 · 중력렌즈 효과를 조형적으로 시뮬레이션',images:['lensing-1','lensing-2','lensing-3']},
  {id:'neutron',year:2025,title:'neutron star collision monument',en:'Neutron Star Collision Monument',desc:'〈중성자별폭발모뉴먼트〉 0.6 × 0.6 × 1.2 m · 석고, 스테인리스 등 혼합재료 · 《암적응》 파워플랜트',images:['neutron-1','neutron-2']},
  {id:'arc',year:2024,title:'the arc of motion',en:'The Arc of Motion',desc:'1,000 × 1,000 × 1,300 mm · 아크릴, 목재, 스틸 · 문의 물리적 경계를 넘어 움직임을 공간 시퀀스로 번역',images:['arc-1','arc-2','arc-3','arc-4']},
