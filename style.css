@@ -75,18 +75,22 @@ button.annotation:focus-visible{outline:1px solid #718c72;outline-offset:3px}
 .sv-work img{display:block;width:100%;height:auto;margin:0 0 18px;background:#f2f2f2}
 .sv-empty{grid-column:2;height:120px;display:flex;align-items:center;justify-content:center;background:#f4f4f2;color:#aaa;font:9px 'Courier New',monospace;letter-spacing:1.5px}
 @media(max-width:760px){.sv-work header{grid-template-columns:1fr}.sv-work header p{grid-column:1}}
-/* Colour version */
-html.color body{background:#f3efe7;color:#1e2430}
-html.color #index,html.color #scroll-view{background:#f3efe7}
-html.color .sv-head{background:#f3efe7ee}
-html.color #viewer{background:#f3efe7ee}
-html.color .work-year h2,html.color .collection-links button,html.color .identity .about-toggle{color:#1d2b4f}
-html.color .work-link{color:#9c9583}
-html.color .work-link:hover,html.color .work-link:focus-visible{color:#c4502c}
-html.color .monogram{color:#1d2b4f}
-html.color .annotation{color:#3c5a9a}
-html.color .eye-guides{color:#3c5a9a}
-html.color .controls button{color:#8f8a7c}html.color .controls button:hover{color:#c4502c}
-html.color #about{background:#f3efe7}
 .controls{z-index:7}
 .controls button,.controls button:hover,.controls button:focus-visible{background:none!important;outline-offset:2px}
+/* Paper lattice behind the eye */
+main .stage{z-index:1}
+.paper-scatter{z-index:0;pointer-events:none}.paper-sheet{position:absolute;inset:0;width:100%;height:100%}
+.paper-scatter .paper-object{transform:none;filter:none;pointer-events:auto;background:none}
+@media(max-width:760px){.paper-scatter{opacity:.55}}
+.water{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+/* Telescope pictogram for astrophotography */
+.scope-btn{padding:4px 0!important;line-height:0}.scope-btn img{display:block;height:46px;width:auto;opacity:.9;transition:opacity .2s,transform .3s}.scope-btn:hover img{opacity:1;transform:rotate(-4deg)}
+/* Colour version: dusty dark-blue water, light type */
+html.color body{background:#4a6276;color:#e8eef2}
+html.color .work-year h2,html.color .collection-links button,html.color .identity .about-toggle,html.color .monogram{color:#f1f5f8}
+html.color .work-link{color:#a9bccb}html.color .work-link:hover,html.color .work-link:focus-visible{color:#fff}
+html.color .annotation,html.color .eye-guides,html.color .rotation-readout{color:#c9d8e2}
+html.color .controls button{color:#a9bccb}html.color .controls button:hover,html.color .controls button:focus-visible{color:#fff}
+html.color .controls button[aria-pressed="false"]#rotation{color:#fff}
+html.color #about{background:#4a6276;border-color:#6b8296}html.color #about a{color:#fff}
+html.color .scope-btn img{opacity:.95}
