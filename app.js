@@ -88,7 +88,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!viewer.hidden)c
 
 document.querySelector("#enter-void").onclick=()=>VoidScene.open();
 
-const workList=document.querySelector('.work-list');if(workList&&WORKS.length){workList.replaceChildren();for(const year of [...new Set(WORKS.map(w=>w.year))].sort((a,b)=>b-a)){const sec=document.createElement('section');sec.className='work-year';const h=document.createElement('h2');h.textContent=year;sec.append(h);for(const w of WORKS.filter(w=>w.year===year)){const b=document.createElement('button');b.className='work-link';b.textContent=w.title;b.dataset.image=items.findIndex(it=>it.work===w);sec.append(b);}workList.append(sec);}}
+const workList=document.querySelector('.work-list');if(workList&&WORKS.length){workList.replaceChildren();const groupOf=w=>w.year<=2022?'2020—2022':String(w.year);for(const label of [...new Set(WORKS.map(groupOf))]){const sec=document.createElement('section');sec.className='work-year';const h=document.createElement('h2');h.textContent=label;sec.append(h);for(const w of WORKS.filter(w=>groupOf(w)===label)){const b=document.createElement('button');b.className='work-link';b.textContent=w.title;b.dataset.image=items.findIndex(it=>it.work===w);sec.append(b);}workList.append(sec);}}
 document.querySelectorAll('.work-link').forEach(button=>{button.onclick=()=>openImage(Number(button.dataset.image),null,items);});
 
 // Dedicated placeholder collections; replace these slots with personal photographs later.
