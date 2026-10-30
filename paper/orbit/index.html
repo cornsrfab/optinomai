@@ -15,7 +15,7 @@
 </head>
 <body>
 <canvas id="sky" aria-label="위성 궤도를 도는 종이모형. 드래그로 시점을 돌릴 수 있습니다."></canvas>
-<div class="hint" aria-hidden="true">DRAG TO ORBIT</div>
+<div class="hint" aria-hidden="true">DRAG TO ORBIT · CLICK TO UNFOLD</div>
 <script src="../../paper-models.js"></script>
 <script src="../mesh.js"></script>
 <script>
@@ -36,8 +36,10 @@
     {r:3.15, inc:1.35, node:.6,  period:118, n:3},
     {r:3.55, inc:.8,  node:5.1,  period:140, n:3},
   ];
-  const sats = []; orbits.forEach((o, oi) => { for (let k = 0; k < o.n; k++) sats.push({o, phase: k/o.n*Math.PI*2 + oi*.7, model: (oi + k*2) % 5, spin: .6 + ((oi*3+k)%5)*.25}); });
-  let W, H, R, yaw = .4, pitch = .62, drag = null, vel = 0;
+  const sats = []; orbits.forEach((o, oi) => { for (let k = 0; k < o.n; k++) sats.push({o, phase: k/o.n*Math.PI*2 + oi*.7, model: (oi + k*2) % 5, spin: .6 + ((oi*3+k)%5)*.25, t: 0, target: 0}); });
+  let W, H, R, yaw = .4, pitch = .62, drag = null, vel = 0, moved = false, placed = [];
+  // Open-sheet sprites are rendered the first time a satellite is unfolded.
+  let openSprites = null; const openSet = () => openSprites || (openSprites = PaperMesh.meshes.map((_, m) => Array.from({length: FRAMES}, (_, f) => { const c = document.createElement('canvas'); c.width = c.height = SPR; PaperMesh.render(c.getContext('2d'), m, f/FRAMES*Math.PI*2 + m, 0, SPR, tone, SPR/2, SPR/2, 1); return c; })));
   function size() { const d = Math.min(devicePixelRatio||1, 2); W = innerWidth; H = innerHeight; canvas.width = W*d; canvas.height = H*d; ctx.setTransform(d,0,0,d,0,0); R = Math.min(W, H) * .12; }
   // Orbital plane → world → view (yaw about the vertical axis, then pitch) → perspective.
   function place(o, ang) {
@@ -56,8 +58,14 @@
     ctx.lineWidth = .8;
     for (const o of orbits) { let prev = null; for (let i = 0; i <= 180; i++) { const p = place(o, i/180*Math.PI*2); if (prev && !hiddenByPlanet(p) && !hiddenByPlanet(prev)) { ctx.strokeStyle = `rgba(190,212,245,${.2 + .25*(p.z+3.6)/7.2})`; ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(p.x, p.y); ctx.stroke(); } prev = p; } }
     // Satellites behind the planet, then the planet, then the ones in front.
-    const placed = sats.map(st => ({st, p: place(st.o, st.phase + s/st.o.period*Math.PI*2)})).sort((a, b) => a.p.z - b.p.z);
-    const drawSat = ({st, p}) => { if (hiddenByPlanet(p)) return; const size = R*.8*p.f, fr = ((Math.floor(s*st.spin*6) % FRAMES) + FRAMES) % FRAMES; ctx.globalAlpha = .55 + .45*(p.z+3.6)/7.2; ctx.drawImage(sprites[st.model][fr], p.x - size/2, p.y - size/2, size, size); ctx.globalAlpha = 1; };
+    for (const st of sats) if (st.t !== st.target) { st.t += Math.sign(st.target - st.t)*Math.min(.03, Math.abs(st.target - st.t)); }
+    placed = sats.map(st => ({st, p: place(st.o, st.phase + s/st.o.period*Math.PI*2)})).sort((a, b) => a.p.z - b.p.z);
+    for (const st of sats) st.hit = null;
+    const drawSat = ({st, p}) => { if (hiddenByPlanet(p)) return; const size = R*.8*p.f*(1 + .9*st.t), fr = ((Math.floor(s*st.spin*(6 - 4.5*st.t)) % FRAMES) + FRAMES) % FRAMES; ctx.globalAlpha = .55 + .45*(p.z+3.6)/7.2;
+      if (st.t <= 0) ctx.drawImage(sprites[st.model][fr], p.x - size/2, p.y - size/2, size, size);
+      else if (st.t >= 1) ctx.drawImage(openSet()[st.model][fr], p.x - size/2, p.y - size/2, size, size);
+      else PaperMesh.render(ctx, st.model, fr/FRAMES*Math.PI*2 + st.model, -.35 + .5*Math.sin(fr/FRAMES*Math.PI*2), size, tone, p.x, p.y, st.t);
+      ctx.globalAlpha = 1; st.hit = {x: p.x, y: p.y, r: size/2}; };
     placed.filter(a => a.p.z < 0).forEach(drawSat);
     const pg = ctx.createRadialGradient(W/2 - R*.35, H/2 - R*.4, R*.1, W/2, H/2, R); pg.addColorStop(0, '#5f8fd6'); pg.addColorStop(1, '#1a3f80');
     ctx.fillStyle = pg; ctx.beginPath(); ctx.arc(W/2, H/2, R, 0, Math.PI*2); ctx.fill();
@@ -65,9 +73,9 @@
     placed.filter(a => a.p.z >= 0).forEach(drawSat);
     if (!reduced) requestAnimationFrame(frame);
   }
-  canvas.addEventListener('pointerdown', e => { drag = {x: e.clientX, y: e.clientY}; canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; yaw += dx*.005; vel = dx*.0004; pitch = Math.max(-1.4, Math.min(1.4, pitch + (e.clientY - drag.y)*.005)); drag = {x: e.clientX, y: e.clientY}; if (reduced) frame(performance.now()); });
-  canvas.addEventListener('pointerup', () => drag = null); canvas.addEventListener('pointercancel', () => drag = null);
+  canvas.addEventListener('pointerdown', e => { drag = {x: e.clientX, y: e.clientY}; moved = false; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.hypot(dx, e.clientY - drag.y) > 4) moved = true; if (!moved) return; yaw += dx*.005; vel = dx*.0004; pitch = Math.max(-1.4, Math.min(1.4, pitch + (e.clientY - drag.y)*.005)); drag = {x: e.clientX, y: e.clientY}; if (reduced) frame(performance.now()); });
+  canvas.addEventListener('pointerup', e => { if (drag && !moved) { let best = null; for (const {st} of placed) if (st.hit && Math.hypot(e.clientX - st.hit.x, e.clientY - st.hit.y) < st.hit.r*1.1 && (!best || st.hit.r < best.hit.r)) best = st; if (best) { best.target = best.target ? 0 : 1; if (reduced) { best.t = best.target; frame(performance.now()); } } } drag = null; }); canvas.addEventListener('pointercancel', () => drag = null);
   addEventListener('resize', () => { size(); if (reduced) frame(performance.now()); });
   size(); requestAnimationFrame(frame);
 })();

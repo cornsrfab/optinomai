@@ -3,7 +3,9 @@ html,body{margin:0;height:100%;background:#fff;overflow:hidden;font-family:'Cour
 #field{position:fixed;inset:0}
 .module{position:absolute;padding:0;border:0;background:none;cursor:grab;touch-action:none;transition:transform .25s}
 html[data-theme="white"] .module{filter:drop-shadow(0 6px 5px #0000001f)}
+html[data-theme="black"] .module.open{filter:drop-shadow(0 12px 14px #0000004a)}
 .module canvas{display:block;width:100%;height:100%;pointer-events:none}
+.module.open{z-index:6}
 .module.dragging{cursor:grabbing;z-index:5;transition:none;filter:drop-shadow(0 10px 10px #0003)}
 .module.gone{transition:transform .45s cubic-bezier(.5,0,.9,.4),opacity .45s;opacity:0}
 #trash{position:fixed;right:28px;bottom:24px;z-index:10;width:56px;height:68px;padding:0;border:0;background:none;cursor:pointer;color:#111}
