@@ -95,28 +95,3 @@ html.color .controls button{color:#a9bccb}html.color .controls button:hover,html
 html.color .controls button[aria-pressed="false"]#rotation{color:#fff}
 html.color #about{background:#4a6276;border-color:#6b8296}html.color #about a{color:#fff}
 html.color .scope-btn img{opacity:.95}
-
-/* Analog study: warm stock, fine ink, and numbered photographic plates. */
-html:not(.color) body{background:#faf9f6;color:#302d29}
-html:not(.color) main:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;opacity:.045;background-image:url("images/paper-grain.svg")}
-html:not(.color) .work-link{color:#8d8880}
-html:not(.color) .work-link:hover,html:not(.color) .work-link:focus-visible{color:#8a4f42}
-html:not(.color) .annotation{color:#987366;letter-spacing:1.2px}
-html:not(.color) .annotation b{background:#bca79b;height:1px}
-html:not(.color) .annotation b:after{background:#faf9f6;border-color:#aa8170}
-html:not(.color) button.annotation:hover,html:not(.color) button.annotation:focus-visible{color:#7c4035;background:#faf9f6d9}
-html:not(.color) button.annotation[aria-pressed="true"]{color:#8d493a}
-html:not(.color) button.annotation[aria-pressed="true"] b,html:not(.color) button.annotation[aria-pressed="true"] b:after{background:#a05f4e}
-html:not(.color) .eye-guides{color:#9b9489;opacity:.42}
-html:not(.color) .rotation-readout{color:#948b7e}
-html:not(.color) .controls{opacity:.65}
-html:not(.color) .controls:hover,html:not(.color) .controls:focus-within{opacity:1}
-html:not(.color) .paper-object{filter:drop-shadow(1px 3px 2px #534b3920)}
-html:not(.color) #index,html:not(.color) #scroll-view,html:not(.color) #about{background:#faf9f6}
-html:not(.color) #viewer{background:#faf9f6f5;backdrop-filter:none}
-html:not(.color) #square{box-shadow:none}
-html:not(.color) .viewer-caption h2,html:not(.color) .sv-work header h3{font-family:Georgia,'Times New Roman',serif;font-weight:400}
-html:not(.color) #index-grid{gap:52px 32px}
-html:not(.color) #index-grid .index-card:before{content:attr(data-sheet-number);display:block;margin-bottom:12px;font:italic 20px Georgia,serif;color:#865c4d}
-html:not(.color) .index-card p{color:#6e665c;font:10px/1.7 'Courier New',monospace}
-@media(max-width:760px){html:not(.color) #index-grid{gap:32px 18px}}
