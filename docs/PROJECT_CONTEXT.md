@@ -198,3 +198,8 @@ SCLERA / IRIS / PUPIL 지시선과 텍스트를 접근 가능한 토글 버튼�
 - `paper/mesh.js`가 접힌 좌표와 펼친(방사형 시트) 좌표를 함께 들고 `render(..., t)`로 임의의 펼침 정도를 그립니다. `writeText`는 시트 위 가운데 정렬 줄바꿈 텍스트입니다.
 - 검정/흰 페이지: 모듈을 클릭하면 커지면서 펼쳐지고(화면 안쪽으로 밀려 들어옴), 다시 클릭하거나 ESC로 접힙니다. 검정 페이지의 모듈은 순서대로 `works.js`의 프로젝트가 배정되어 펼치면 제목·연도·설명이 종이에 쓰여 있습니다(흰 페이지는 텍스트 없음). 펼친 상태로도 휴지통에 끌어 버릴 수 있습니다.
 - 궤도 페이지: 위성을 클릭하면 궤도를 돌면서 펼쳐지고(펼친 시트 스프라이트는 첫 클릭 때 생성) 다시 클릭하면 접힙니다.
+
+
+## 2026-11-11 — Restore appearance and cursor gaze
+- Reverted the analog styling at user request.
+- Mouse position now guides eye yaw and pitch with eased rotation and bounded angles. Drag and wheel retain priority for 1.4 seconds; component separation and open viewers suspend gaze. PAUSE stops automatic gaze. Touch retains existing drag behavior, and leaving the window resumes ambient rotation.
